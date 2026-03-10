@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-slate-900 text-white">
+    <h1 class="text-3xl text-center mt-40 font-bold font-bangers">PARTIDA</h1>
+    <div class="flex flex-col bg-slate-800 rounded-xl m-5 p-5 justify-center">
+        <p class="font-bold text-xl">Nombre: <span id="name" class="text-blue-400"></span></p>
+        <p class="font-bold text-xl">Sala: <span id="room" class="text-blue-400"></span></p>
+    </div>
+    <div class="flex flex-col bg-slate-800 rounded-xl m-5 p-5 justify-center">
+        <p class="font-bold text-xl">Jugadores:</p>
+        <div class="flex  gap-2 my-2">
+            <input type="text" id="addplayer"
+                class="bg-slate-700 hover:bg-slate-700 border-2 max-md:w-full border-slate-600 text-white py-2 px-4 rounded"
+                placeholder="Nombre">
+            <button id="addplayerbutton" class="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded">
+                <p class="hidden md:block">Agregar</p> <i class="fas fa-user-plus"></i>
+            </button>
+        </div>
+        <div id="players" class="flex p-5 flex-col">
+            <li class="font-bold text-xl">
+                <p id="player1"></p>
+            </li>
+            <li class="font-bold text-xl hidden md:block">
+                <p id="player2"></p>
+            </li>
+            <li class="font-bold text-xl hidden md:block">
+                <p id="player3"></p>
+            </li>
+            <li class="font-bold text-xl hidden md:block">
+                <p id="player4"></p>
+            </li>
+            <li class="font-bold text-xl hidden md:block">
+                <p id="player5"></p>
+            </li>
+            <li class="font-bold text-xl hidden md:block">
+                <p id="player6"></p>
+            </li>
+            <li class="font-bold text-xl hidden md:block">
+                <p id="player7"></p>
+            </li>
+            <li class="font-bold text-xl hidden md:block">
+                <p id="player8"></p>
+            </li>
+            <li class="font-bold text-xl hidden md:block">
+                <p id="player9"></p>
+            </li>
+            <li class="font-bold text-xl hidden md:block">
+                <p id="player10"></p>
+            </li>
+        </div>
+    </div>
+</body>
+
+<script>
+    // obtener datos de localstorage para mostrar en la partida
+    let name = localStorage.getItem('name');
+    let room = localStorage.getItem('room');
+    document.getElementById('name').textContent = name;
+    document.getElementById('room').textContent = room;
+
+    // player 1 es el id name
+    document.getElementById('player1').textContent = name;
+    // boton para agregar jugadores
+    document.getElementById('addplayerbutton').addEventListener('click', () => {
+        let player = document.getElementById('addplayer').value;
+        document.getElementById('players').innerHTML += `<li class="font-bold text-xl"><p>${player}</p></li>`;
+    });
+</script>
+
+</html>
