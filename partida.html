@@ -41,33 +41,34 @@
             <li class="font-bold text-xl">
                 <p id="player1"></p>
             </li>
-            <li class="font-bold text-xl hidden md:block">
-                <p id="player2"></p>
-            </li>
-            <li class="font-bold text-xl hidden md:block">
-                <p id="player3"></p>
-            </li>
-            <li class="font-bold text-xl hidden md:block">
-                <p id="player4"></p>
-            </li>
-            <li class="font-bold text-xl hidden md:block">
-                <p id="player5"></p>
-            </li>
-            <li class="font-bold text-xl hidden md:block">
-                <p id="player6"></p>
-            </li>
-            <li class="font-bold text-xl hidden md:block">
-                <p id="player7"></p>
-            </li>
-            <li class="font-bold text-xl hidden md:block">
-                <p id="player8"></p>
-            </li>
-            <li class="font-bold text-xl hidden md:block">
-                <p id="player9"></p>
-            </li>
-            <li class="font-bold text-xl hidden md:block">
-                <p id="player10"></p>
-            </li>
+        </div>
+    </div>
+    <div class="m-5">
+        <button id="startgame" class="bg-blue-400 hover:bg-blue-500  w-full text-white font-bold py-2 px-4 rounded">
+            <p class="hidden md:block">Iniciar Partida</p> <i class="fas fa-play"></i>
+        </button>
+    </div>
+    <!-- modal iniciar partida -->
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-slate-800 p-5 rounded-xl">
+            <h1 class="text-3xl text-center mb-10 font-bold font-bangers">INICIAR PARTIDA</h1>
+            <p>Sala: <span id="room" class="text-blue-400"></span></p>
+            <p>Jugadores: <span id="playerscount" class="text-blue-400"></span></p>
+            <div class="flex mb-3 justify-between">
+                <p>Impostores: <span id="impostorscount" class="text-blue-400"></span></p>
+                <button id="addimpostor" class="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded">
+                    <p class="hidden md:block">Añadir</p> <i class="fas fa-user-plus"></i>
+                </button>
+            </div>
+            <p class="text-xl font-bold">¿Estas seguro de iniciar la partida?</p>
+            <div class="flex justify-end gap-2 mt-5">
+                <button id="cancel" class="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded">
+                    <p class="hidden md:block">Cancelar</p> <i class="fas fa-times"></i>
+                </button>
+                <button id="confirm" class="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded">
+                    <p class="hidden md:block">Confirmar</p> <i class="fas fa-check"></i>
+                </button>
+            </div>
         </div>
     </div>
 </body>
@@ -76,6 +77,7 @@
     // obtener datos de localstorage para mostrar en la partida
     let name = localStorage.getItem('name');
     let room = localStorage.getItem('room');
+
     document.getElementById('name').textContent = name;
     document.getElementById('room').textContent = room;
 
@@ -84,7 +86,60 @@
     // boton para agregar jugadores
     document.getElementById('addplayerbutton').addEventListener('click', () => {
         let player = document.getElementById('addplayer').value;
-        document.getElementById('players').innerHTML += `<li class="font-bold text-xl"><p>${player}</p></li>`;
+        if (player.trim() === '') return;
+
+        let li = document.createElement('li');
+        li.className = 'font-bold mt-2 flex justify-between text-xl';
+        li.innerHTML = `<p>${player}</p><button class="bg-red-800 hover:bg-red-900 text-red-400 text-xs font-bold py-2 px-2 rounded-md"><i class="fas fa-trash"></i></button>`;
+
+        document.getElementById('players').appendChild(li);
+
+        // LIMPIAR INPUT
+        document.getElementById('addplayer').value = '';
+
+        // boton para eliminar jugadores
+        li.querySelector('button').addEventListener('click', () => {
+            li.remove();
+        });
+    });
+
+    let impostorCount = 1;
+
+    // boton para iniciar partida
+    document.getElementById('startgame').addEventListener('click', () => {
+        document.getElementById('modal').classList.remove('hidden');
+        document.getElementById('room').textContent = room;
+        document.getElementById('playerscount').textContent = document.getElementById('players').children.length;
+        document.getElementById('impostorscount').textContent = impostorCount;
+    });
+
+    // en impostor nada mas se pueda agregar ya que los tripulantes son los jugadores solo se elije cuantos impostores seran para 
+    // que sean elegidos aleatoriamente
+    document.getElementById('addimpostor').addEventListener('click', () => {
+        let playersCount = document.getElementById('players').children.length;
+        let maxImpostors = playersCount > 1 ? playersCount - 1 : 1;
+
+        if (impostorCount < maxImpostors) {
+            impostorCount++;
+        } else {
+            impostorCount = 1; // Reiniciar si llega al máximo
+        }
+        document.getElementById('impostorscount').textContent = impostorCount;
+    });
+
+    // boton para cancelar
+    document.getElementById('cancel').addEventListener('click', () => {
+        document.getElementById('modal').classList.add('hidden');
+    });
+
+    // boton para confirmar
+    document.getElementById('confirm').addEventListener('click', () => {
+        // Guardar jugadores e impostores para el juego
+        let playerNames = Array.from(document.getElementById('players').children).map(li => li.querySelector('p').textContent);
+        localStorage.setItem('players', JSON.stringify(playerNames));
+        localStorage.setItem('impostors', impostorCount);
+
+        window.location.href = 'juego.html';
     });
 </script>
 
