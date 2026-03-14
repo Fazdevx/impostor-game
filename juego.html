@@ -1,0 +1,89 @@
+<!-- pagina del juego -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-slate-900 text-white">
+
+</body>
+
+<script>
+    // traer los datos de localstorage
+    const name = localStorage.getItem('name');
+    const room = localStorage.getItem('room');
+    const players = JSON.parse(localStorage.getItem('players'));
+    const impostors = JSON.parse(localStorage.getItem('impostors'));
+    const theme = localStorage.getItem('theme') || 'Ninguna';
+    const themeImage = localStorage.getItem('themeImage') || '';
+
+    console.log(name, room, players, impostors, theme, themeImage);
+
+    // Listas de palabras por tematica
+    const wordsByTheme = {
+        'Lugares': ['Playa', 'Montaña', 'Ciudad', 'Pueblo', 'Bosque', 'Desierto', 'Selva', 'Isla', 'Lago', 'Volcan', 'Parque', 'Museo'],
+        'Deportes': ['Futbol', 'Baloncesto', 'Natacion', 'Tenis', 'Beisbol', 'Voleibol', 'Atletismo', 'Boxeo', 'Ciclismo', 'Golf', 'Rugby', 'Surf'],
+        'Politica': ['Presidente', 'Congreso', 'Votaciones', 'Ley', 'Corrupcion', 'Ministro', 'Campaña', 'Senador', 'Debate', 'Democracia', 'Alcalde', 'Gobernador'],
+        'Farandula': ['Actor', 'Cantante', 'Película', 'Concierto', 'Escandalo', 'Premios', 'Paparazzi', 'Alfombra Roja', 'Chisme', 'Exclusiva', 'Influencer', 'Streamer'],
+        'Baje de Pepa': ['Locura', 'Alucinacion', 'Viaje', 'Fiesta', 'Resaca', 'Amanecida', 'Descontrol', 'Euforia', 'Rave', 'After', 'Psicodelia', 'Frenesi']
+    };
+
+    let selectedWord = 'Ninguna tematica seleccionada';
+    if (theme && wordsByTheme[theme]) {
+        const words = wordsByTheme[theme];
+        selectedWord = words[Math.floor(Math.random() * words.length)];
+    }
+
+    // mostrar los datos en la pantalla
+    document.body.innerHTML += `
+        <div class="flex flex-col bg-slate-800 rounded-xl m-5 p-5 justify-center">
+            <div class="flex flex-col mb-5">
+                <label class="font-bold">Nombre</label>
+                <p>${name}</p>
+            </div>
+            <div class="flex flex-col">
+                <label class="font-bold">Nombre de la partida</label>
+                <p>${room}</p>
+            </div>
+            <div class="flex flex-col">
+                <label class="font-bold">Jugadores</label>
+                <ul>
+                    ${players.map(player => `<li>${player}</li>`).join('')}
+                </ul>
+            </div>
+            <div class="flex flex-col">
+                <label class="font-bold">Impostores</label>
+                <p>${impostors}</p>
+            </div>
+            <div class="flex flex-col mb-5 items-center bg-slate-700 p-4 rounded-xl">
+                <label class="font-bold text-xl mb-2">Tematica</label>
+                ${themeImage ? `<img src="${themeImage}" alt="${theme}" class="w-24 h-24 object-contain mb-2">` : ''}
+                <p class="font-bold text-blue-400 text-xl">${theme}</p>
+            </div>
+            <div class="flex flex-col mt-2">
+                <label class="font-bold text-green-400">Palabra de la partida</label>
+                <p class="text-2xl font-bold bg-slate-700 p-2 rounded-lg text-center mt-2">${selectedWord}</p>
+            </div>
+        </div>
+    `;
+</script>
+
+</html>
